@@ -27,7 +27,7 @@ angular.module('someklone', ['ionic', 'someklone.controllers', 'someklone.servic
 
 
 
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $compileProvider) {  
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $compileProvider) {
 
   $ionicConfigProvider.tabs.position("bottom");
   // Ionic uses AngularUI Router which uses the concept of states
@@ -35,6 +35,12 @@ angular.module('someklone', ['ionic', 'someklone.controllers', 'someklone.servic
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
+
+  .state('login', {
+     url: '/login',
+     templateUrl: 'templates/login.html',
+     controller: 'LoginCtrl'
+ })
 
   // setup an abstract state for the tabs directive
   .state('tab', {
@@ -83,7 +89,7 @@ angular.module('someklone', ['ionic', 'someklone.controllers', 'someklone.servic
           controller: 'SearchCtrl'
       }
     }
-  })  
+  })
 
   .state('tab.activity', {
     url: '/activity',
@@ -108,7 +114,7 @@ angular.module('someklone', ['ionic', 'someklone.controllers', 'someklone.servic
   .state('post', {
     url: '/post',
     templateUrl: 'templates/post.html',
-    controller: 'PostCtrl'    
+    controller: 'PostCtrl'
   })
 
   .state('post-confirm', {
@@ -119,14 +125,14 @@ angular.module('someklone', ['ionic', 'someklone.controllers', 'someklone.servic
         imageUri: null
     }
   })
-  
+
   .state('comment', {
     url: '/comment/:postId',
     templateUrl: 'templates/comment-post.html',
-    controller: 'PostCommentCtrl'    
+    controller: 'PostCommentCtrl'
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/home');
+  $urlRouterProvider.otherwise('/login');
 
 });
