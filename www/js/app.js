@@ -1,6 +1,6 @@
 
 angular.module('someklone.config', []).constant('appConfig', {
-        "apiAddr": "http://your-server-app-address-here"
+        "apiAddr": "https://obscure-chamber-45306.herokuapp.com/"
 });
 
 // Declare the services module

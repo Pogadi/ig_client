@@ -1,4 +1,4 @@
-angular.module('someklone.services', [])
+angular.module('someklone.services')
 
   .service('LoginService', function($q) {
     return {
