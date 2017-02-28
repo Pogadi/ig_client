@@ -1,6 +1,6 @@
 
 angular.module('config', []).constant('appConfig', {
-        url: 'https://stormy-mesa-86252.herokuapp.com/'
+        url: 'https://secret-harbor-34265.herokuapp.com/'
 });
 
 // Declare the services module
