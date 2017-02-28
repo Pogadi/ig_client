@@ -1,6 +1,6 @@
 
 angular.module('config', []).constant('appConfig', {
-        "apiAddr": "https://stormy-mesa-86252.herokuapp.com/"
+        url: 'https://stormy-mesa-86252.herokuapp.com/'
 });
 
 // Declare the services module
