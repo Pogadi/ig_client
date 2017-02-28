@@ -1,36 +1,94 @@
 angular.module('someklone.controllers', [])
 
-.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state) {
-    $scope.data = {};
+.controller('HomeCtrl', function($scope, Posts, $ionicPopup, $ionicHistory, $state) {
 
-    $scope.login = function() {
-        LoginService.loginUser($scope.data.username, $scope.data.password).success(function(data) {
-            $state.go('tab.home');
-        }).error(function(data) {
-            var alertPopup = $ionicPopup.alert({
-                title: 'Login failed!',
-                template: 'Please check your credentials!'
-            });
-        });
-    }
+  $scope.$on('$ionicView.enter', function(){
+      Posts.all().then(function(data)
+           {
+             $scope.posts = data;
+           }
+        );
+  });
+
+  $scope.toggleLike = function(post)
+  {
+      Posts.toggleLike(post);
+      $ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true
+      });
+      $state.go('tab.home',null,{reload:true});
+  }
+
+
+  $scope.comment = function(post)
+  {
+      $ionicHistory.nextViewOptions({
+        disableAnimate: true,
+        disableBack: true
+      });
+      $state.go('comment', { postId: post.id}, null, {reload:true} );
+  }
+
+
 })
 
-.controller('HomeCtrl', function($scope, $state, Posts) {
-    Posts.following().then(function(data)
-        {
-            $scope.posts = data;
-        }
-    );
+.controller('LoginCtrl', function($scope, User, $ionicPopup, $ionicHistory, $state) {
+  $scope.user = {
+    name: "",
+    password: ""
+  };
 
-    $scope.toggleLike = function(post)
-    {
-        Posts.toggleLike(post);
-    }
+  $scope.login = function()
+  {
+    User.login($scope.user.name, $scope.user.password).then(function(){
+      $ionicHistory.nextViewOptions({
+        disableBack: true
+      });
+      $state.go('tab.home');
+    }).catch(function(){
+      var alertPopup = $ionicPopup.alert({
+        title: 'Login fail',
+        template: 'Incorrect username or password'
+      });
+    });
+  }
 
-    $scope.comment = function(post)
-    {
-        $state.go('comment', { postId: post.id });
-    }
+  $scope.GoToSignup = function()
+  {
+    $state.go('signup');
+  }
+
+})
+
+.controller('SignupCtrl', function($scope, User, $ionicPopup, $ionicHistory, $state) {
+  $scope.newuser = {
+    name: "",
+    password: ""
+  };
+
+  $scope.signup = function()
+  {
+    User.signup($scope.newuser.name, $scope.newuser.password).then(function(){
+      var alertPopup = $ionicPopup.alert({
+        title: 'Signup successful',
+        template: 'Please go back to login page to log in'
+      });
+    }).catch(function(){
+      var alertPopup = $ionicPopup.alert({
+        title: 'Signup fail',
+        template: 'Missing somethings'
+      });
+    });
+  }
+
+  $scope.goBack = function()
+  {
+      $ionicHistory.nextViewOptions({
+          disableBack: true
+      });
+      $state.go('login');
+  }
 })
 
 .controller('BrowseCtrl', function($scope, $state) {

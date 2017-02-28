@@ -1,15 +1,15 @@
 
-angular.module('someklone.config', []).constant('appConfig', {
-        "apiAddr": "https://obscure-chamber-45306.herokuapp.com/"
+angular.module('config', []).constant('appConfig', {
+        "apiAddr": "https://stormy-mesa-86252.herokuapp.com/"
 });
 
 // Declare the services module
-angular.module('someklone.services', ['someklone.config']);
+angular.module('someklone.services', ['config']);
 
 // Declare the actual application module
 angular.module('someklone', ['ionic', 'someklone.controllers', 'someklone.services', 'ngCordova'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, User, $state) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -23,30 +23,46 @@ angular.module('someklone', ['ionic', 'someklone.controllers', 'someklone.servic
       StatusBar.styleDefault();
     }
   });
+
+  $rootScope.$on('$stateChangeError', function(e, toState, toParams, fromState, fromParams, error){
+      $state.go("login");
+  });
 })
 
 
 
-.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider, $compileProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
-  $ionicConfigProvider.tabs.position("bottom");
+   $ionicConfigProvider.tabs.position('bottom');
+   $ionicConfigProvider.tabs.style('standard');
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  .state('login', {
-     url: '/login',
-     templateUrl: 'templates/login.html',
-     controller: 'LoginCtrl'
- })
-
   // setup an abstract state for the tabs directive
-  .state('tab', {
+    .state('tab', {
     url: '/tab',
     abstract: true,
-    templateUrl: 'templates/tabs.html'
+    templateUrl: 'templates/tabs.html',
+    resolve: { islogged: function(User){
+        return User.isLogged();
+      }
+    }
+  })
+
+  // Each tab has its own nav history stack:
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'LoginCtrl'
+  })
+
+  .state('signup', {
+    url: '/signup',
+    templateUrl: 'templates/signup.html',
+    controller: 'SignupCtrl'
   })
 
   // Each tab has its own nav history stack:

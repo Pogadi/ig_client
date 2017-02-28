@@ -1,4 +1,66 @@
-angular.module('someklone.services').factory('Users', function($q) {
+angular.module('someklone.services')
+
+.factory('User', function($q, $http, appConfig) {
+
+  var user = null;
+
+  return {
+    login: function(username, password) {
+      return $q(function(resolve, reject){
+        $http.post(appConfig.url + "login", { username: username, password: password}).then(function(result){
+          if(result.status == 200)
+          {
+            user = { id: result.data.id, username: result.data.username };
+            resolve();
+          }
+          else
+          {
+            reject();
+          }
+        }).catch(function(){
+          reject();
+        });
+      });
+    },
+    isLogged: function()
+    {
+      return $q(function(resolve, reject){
+        if(user != null)
+        {
+
+          resolve(
+          );
+        }
+        else
+        {
+          reject();
+        }
+      });
+    },
+    signup: function( newusername, newpassword) {
+      return $q(function(resolve, reject){
+        $http.post(appConfig.url + "signup", { username: newusername, password: newpassword}).then(function(result){
+          if(result.status == 200)
+          {
+            resolve();
+          }
+          else
+          {
+            reject();
+          }
+        }).catch(function(){
+          reject();
+        });
+      });
+    },
+    getLoggedUser: function()
+    {
+      return user;
+    }
+  };
+})
+
+.factory('Users', function($q) {
 
     var activeUser = {
             id: 1,
@@ -53,48 +115,6 @@ angular.module('someklone.services').factory('Users', function($q) {
         }
     ];
 
-    return {
-        searchUser: function(searchWord) {
-            
-            var upperCaseSearchWord = searchWord.toUpperCase();
-            return $q(function(resolve, reject){
-                if(searchWord.length > 0)
-                {
-                    var matches = users.filter(function(u){
-                        var testString = u.username.toUpperCase();                        
-                        return testString.includes(upperCaseSearchWord);                    
-                    });
 
-                    resolve(matches);
-                }
-                else
-                {
-                    reject();
-                }
-            });            
-        },
-        getOne: function(key)
-        {
-            return $q(function(resolve, reject){
-                for(var i = 0; i < users.length; i++)
-                {
-                    if(users[i].id == key)
-                    {
-                        resolve(users[i]);
-                    }
-                }
-                reject();
-                
-            });
-        },
-        getActiveUser: function()
-        {
-            return activeUser;
-        },
-        getActiveUserActivity: function()
-        {
-            return activeUser.activity;
-        }
-
-    };
-})
+    
+});
